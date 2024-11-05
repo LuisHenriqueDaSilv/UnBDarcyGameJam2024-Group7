@@ -6,6 +6,7 @@ class FlyDemon(pygame.sprite.Sprite):
     self.currentStatus = 'idle'
     self.xSpeed = 0;
     self.ySpeed = 0;
+    self.life = 100;
     self.sprites = {}
     self.falling = False
     self.sprites['idle'] = []

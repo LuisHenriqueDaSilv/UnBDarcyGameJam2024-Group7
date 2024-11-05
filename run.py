@@ -1,7 +1,7 @@
 import pygame
 
 from src.Player import Player
-from src.Island import Island
+from src.DemonFly import DemonFly
 from src.createWorld import createWorld
 from settings import *
 
@@ -10,11 +10,13 @@ pygame.display.set_caption("UnB Darcy Game Jam - Grupo 07")
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 clock = pygame.time.Clock()
 
-
 allSprites = pygame.sprite.Group()
 floorGroup = pygame.sprite.Group()
 
 player = Player()
+demonFly = DemonFly(550, 0, 100)
+
+allSprites.add(demonFly)
 allSprites.add(player)
 
 createWorld(floorGroup)
@@ -45,9 +47,6 @@ while running:
       rightCollide = True
     elif blockLeft +15 > player.rect.x and blockLeft-15 < player.rect.x:
       leftCollide = True
-    # print("============")
-    # print(collide.rect.x)
-    # print(playerRight)
     
   player.bottomCollide = bottomCollide
   player.topCollide = topCollide
@@ -56,14 +55,16 @@ while running:
 
 
   key = pygame.key.get_pressed()
-  if key[pygame.K_a] and player.bottomCollide:
+  if key[pygame.K_a] and player.bottomCollide and not player.currentStatus == 'attack':
     player.run(-5)
-  elif key[pygame.K_d] and player.bottomCollide:
+  elif key[pygame.K_d] and player.bottomCollide and not player.currentStatus == 'attack':
     player.run(5)
-  elif player.bottomCollide:
+  elif key[pygame.K_f] and not player.currentStatus == 'attack':
+    player.attack()
+  elif player.bottomCollide and not player.currentStatus == 'attack':
     player.xSpeed = 0
     player.changeStatus('idle')
-
+  
   if key[pygame.K_SPACE]:
     player.jump()
 

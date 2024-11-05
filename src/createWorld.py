@@ -12,6 +12,7 @@ def createWorld(spriteGroup):
     spriteGroup.add(island)
 
   spriteGroup.add(Island('mid', midIsland.rect.width, SCREEN_HEIGHT-130))
-  spriteGroup.add(Island('right', midIsland.rect.width*2, SCREEN_HEIGHT-130))
+  spriteGroup.add(Island('mid', midIsland.rect.width*2, SCREEN_HEIGHT-130))
+  spriteGroup.add(Island('right', midIsland.rect.width*3, SCREEN_HEIGHT-130))
   # island = Island('right', SCREEN_WIDTH-300, SCREEN_HEIGHT-100)
 

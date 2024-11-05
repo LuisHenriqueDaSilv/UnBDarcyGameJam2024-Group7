@@ -40,6 +40,14 @@ class Player(pygame.sprite.Sprite):
     self.sprites['fall'].append(pygame.transform.scale(pygame.image.load('assets/HeroKnight/Fall/HeroKnight_Fall_2.png'), (44*1.7, 40*1.7)))
     self.sprites['fall'].append(pygame.transform.scale(pygame.image.load('assets/HeroKnight/Fall/HeroKnight_Fall_3.png'), (44*1.7, 40*1.7)))
 
+    self.sprites['attack'] = []
+    self.sprites['attack'].append(pygame.transform.scale(pygame.image.load('assets/HeroKnight/Attack1/HeroKnight_Attack1_0.png'), (44*1.7, 40*1.7)))
+    self.sprites['attack'].append(pygame.transform.scale(pygame.image.load('assets/HeroKnight/Attack1/HeroKnight_Attack1_1.png'), (32*1.7, 40*1.7)))
+    self.sprites['attack'].append(pygame.transform.scale(pygame.image.load('assets/HeroKnight/Attack1/HeroKnight_Attack1_2.png'), (75*1.7, 40*1.7)))
+    self.sprites['attack'].append(pygame.transform.scale(pygame.image.load('assets/HeroKnight/Attack1/HeroKnight_Attack1_3.png'), (49*1.7, 39*1.7)))
+    self.sprites['attack'].append(pygame.transform.scale(pygame.image.load('assets/HeroKnight/Attack1/HeroKnight_Attack1_4.png'), (38*1.7, 39*1.7)))
+    self.sprites['attack'].append(pygame.transform.scale(pygame.image.load('assets/HeroKnight/Attack1/HeroKnight_Attack1_5.png'), (28*1.7, 39*1.7)))
+
     self.currentSpriteIndex = 0
     self.image = self.sprites[self.currentStatus][self.currentSpriteIndex]
 
@@ -48,6 +56,12 @@ class Player(pygame.sprite.Sprite):
 
   def update(self): 
     currentTypeOfImage = self.currentStatus if self.bottomCollide else 'fall'
+    if self.currentStatus == 'attack' and not self.currentSpriteIndex < len(self.sprites[currentTypeOfImage])-1:
+      self.endAttack()
+    
+    if self.currentStatus == 'attack' and int(self.currentSpriteIndex) == 2 and self.lastMove < 0: 
+      self.rect.move_ip(-4, 0)
+
     self.currentSpriteIndex = self.currentSpriteIndex +0.2 if self.currentSpriteIndex < len(self.sprites[currentTypeOfImage])-1 else 0;
     self.image = self.sprites[currentTypeOfImage][int(self.currentSpriteIndex)]
 
@@ -92,3 +106,11 @@ class Player(pygame.sprite.Sprite):
     if not self.bottomCollide: return
     self.ySpeed = -9
     self.bottomCollide = False
+  
+  def attack(self):
+    if self.bottomCollide:
+      self.xSpeed = 0
+    self.changeStatus('attack')
+  
+  def endAttack(self):
+    self.changeStatus('idle')
