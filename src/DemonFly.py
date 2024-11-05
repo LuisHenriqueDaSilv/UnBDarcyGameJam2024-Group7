@@ -1,9 +1,10 @@
 import pygame
+from settings import SCREEN_HEIGHT
 
 class DemonFly(pygame.sprite.Sprite):
   def __init__(self, y, xa, xb):
     pygame.sprite.Sprite.__init__(self)
-    self.currentStatus = 'idle'
+    self.currentStatus = 'flying'
     self.sprites = {}
     self.falling = False
     self.xSpeed = 0
@@ -54,16 +55,16 @@ class DemonFly(pygame.sprite.Sprite):
     self.rect.topleft = xa, y
 
 
-  def update(self): 
-    print(self.life)
+  def update(self, playerY, ySpeed): 
     if self.currentStatus == 'death' and int(self.currentSpriteIndex) == 6:
       self.delete();
 
     if self.currentStatus == 'hurt' and int(self.currentSpriteIndex) == 3:
-      self.changeStatus('idle')
+      self.changeStatus('flying')
     self.currentSpriteIndex = self.currentSpriteIndex +0.2 if self.currentSpriteIndex < len(self.sprites[self.currentStatus])-1 else 0;
     self.image = self.sprites[self.currentStatus][int(self.currentSpriteIndex)]
-    self.move()
+    moveInY = ySpeed if playerY < SCREEN_HEIGHT/2+10 else 0
+    self.move(moveInY)
     if self.xSpeed > 0:
       self.image = pygame.transform.flip(self.image, True, False)
 
@@ -72,15 +73,16 @@ class DemonFly(pygame.sprite.Sprite):
     self.currentStatus = newStatus
     self.currentSpriteIndex = 0
   
-  def move(self):
+  def move(self, ySpeed = 0):
     if self.rect.x <= self.xa: 
       self.xSpeed = 1
     elif self.rect.x >= self.xb:
       self.xSpeed = -1
     
-    self.rect.move_ip(self.xSpeed, 0)
+    self.rect.move_ip(self.xSpeed, -ySpeed)
   
   def hit(self, damage, left):
+    if self.currentStatus == 'death': return
     if self.currentStatus != "hurt":
       self.changeStatus('hurt')
       knockback = 0;

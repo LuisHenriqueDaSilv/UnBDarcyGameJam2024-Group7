@@ -1,6 +1,7 @@
 import pygame
 
 from src.Player import Player
+from src.Background import Background
 from src.createWorld import createWorld
 from src.createEnemies import createEnemies
 from settings import *
@@ -10,9 +11,15 @@ pygame.display.set_caption("UnB Darcy Game Jam - Grupo 07")
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 clock = pygame.time.Clock()
 
+
 allSprites = pygame.sprite.Group()
 floorGroup = pygame.sprite.Group()
 enemiesGroup = pygame.sprite.Group()
+backgroundGroup = pygame.sprite.Group()
+
+baseBackground = Background(0)
+for i in range(3):
+  backgroundGroup.add(Background(-i*baseBackground.rect.height))
 
 player = Player()
 
@@ -78,12 +85,18 @@ while running:
     if event.type == pygame.QUIT:
       running = False
 
-    
+  
+  for background in backgroundGroup:
+    background.update(player.rect.y, player.ySpeed)
+
+  backgroundGroup.draw(screen)
   allSprites.update()
   allSprites.draw(screen)
-  floorGroup.update()
+  for floor in floorGroup: 
+    floor.update(player.rect.y, player.ySpeed)
   floorGroup.draw(screen)
-  enemiesGroup.update()
+  for enemie in enemiesGroup:
+    enemie.update(player.rect.y, player.ySpeed)
   enemiesGroup.draw(screen)
   pygame.display.flip()
 

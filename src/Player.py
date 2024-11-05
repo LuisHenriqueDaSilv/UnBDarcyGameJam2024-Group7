@@ -1,9 +1,11 @@
 import pygame
+from settings import SCREEN_HEIGHT
 
 class Player(pygame.sprite.Sprite):
   def __init__(self):
     pygame.sprite.Sprite.__init__(self)
     self.currentStatus = 'idle'
+    self.life = 100
     self.bottomCollide = False
     self.topCollide = False
     self.leftCollide = False
@@ -55,6 +57,7 @@ class Player(pygame.sprite.Sprite):
     self.rect.topleft = 100, 500
 
   def update(self): 
+    print(self.life)
     currentTypeOfImage = self.currentStatus
     if not self.currentStatus == "attack" and not self.bottomCollide:
       currentTypeOfImage = 'fall'
@@ -88,7 +91,8 @@ class Player(pygame.sprite.Sprite):
 
     if self.lastMove < 0:
       self.image = pygame.transform.flip(self.image, True, False)
-    if self.ySpeed != 0:
+
+    if self.ySpeed != 0 and self.rect.y > SCREEN_HEIGHT/2:
       self.rect.move_ip(0, self.ySpeed)
 
     if self.xSpeed < 0 and self.rect.x < 5: return # Limite  esquerdo
