@@ -5,7 +5,7 @@ def createWorld(spriteGroup):
 
   island = Island('left', 100, SCREEN_HEIGHT)
   numberOfIslands = SCREEN_WIDTH/island.rect.width
-  for i in range (int(numberOfIslands)+1):
+  for i in range (int(numberOfIslands*2)+1):
     island = Island('mid', i*island.rect.width, SCREEN_HEIGHT)
     spriteGroup.add(island)
 
