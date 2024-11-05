@@ -4,8 +4,8 @@ class Island(pygame.sprite.Sprite):
   def __init__(self, type, x, y):
     self.sprites = {}
     
-    self.sprites['left'] = pygame.transform.scale(pygame.image.load('assets/Island/left.png'), (100, 100))
-    self.sprites['mid'] = pygame.transform.scale(pygame.image.load('assets/Island/mid.png'), (320/2.5, 160/2.5))
+    self.sprites['left'] = pygame.transform.scale(pygame.image.load('assets/Island/left.png'), (123, 100))
+    self.sprites['mid'] = pygame.transform.scale(pygame.image.load('assets/Island/mid.png'), (128/2.5, 128/2.5))
     self.sprites['right'] = pygame.transform.scale(pygame.image.load('assets/Island/right.png'), (100, 100))
     
     self.allSprites = pygame.sprite.Group()

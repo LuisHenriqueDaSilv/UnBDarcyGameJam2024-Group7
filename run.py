@@ -2,10 +2,8 @@ import pygame
 
 from src.Player import Player
 from src.Island import Island
-
-SCREEN_HEIGHT = 800
-SCREEN_WIDTH = 600
-FPS = 60
+from src.createWorld import createWorld
+from settings import *
 
 pygame.init()
 pygame.display.set_caption("UnB Darcy Game Jam - Grupo 07")
@@ -19,12 +17,7 @@ floorGroup = pygame.sprite.Group()
 player = Player()
 allSprites.add(player)
 
-island = Island('mid', 100, SCREEN_HEIGHT)
-numberOfIslands = SCREEN_WIDTH/island.rect.width
-for i in range (int(numberOfIslands)+1):
-  island = Island('mid', i*island.rect.width, SCREEN_HEIGHT)
-  floorGroup.add(island)
-
+createWorld(floorGroup)
 
 running = True
 while running:
