@@ -4,8 +4,13 @@ class Player(pygame.sprite.Sprite):
   def __init__(self):
     pygame.sprite.Sprite.__init__(self)
     self.currentStatus = 'idle'
+    self.bottomCollide = False
+    self.topCollide = False
+    self.leftCollide = False
+    self.rightCollide = False
     self.xSpeed = 0;
     self.ySpeed = 0;
+    self.lastMove = 1
     self.sprites = {}
     self.falling = False
     self.sprites['idle'] = []
@@ -35,7 +40,6 @@ class Player(pygame.sprite.Sprite):
     self.sprites['fall'].append(pygame.transform.scale(pygame.image.load('assets/HeroKnight/Fall/HeroKnight_Fall_2.png'), (44*1.7, 40*1.7)))
     self.sprites['fall'].append(pygame.transform.scale(pygame.image.load('assets/HeroKnight/Fall/HeroKnight_Fall_3.png'), (44*1.7, 40*1.7)))
 
-
     self.currentSpriteIndex = 0
     self.image = self.sprites[self.currentStatus][self.currentSpriteIndex]
 
@@ -43,13 +47,35 @@ class Player(pygame.sprite.Sprite):
     self.rect.topleft = 100, 500
 
   def update(self): 
-    currentTypeOfImage = self.currentStatus if not self.falling else 'fall'
+    currentTypeOfImage = self.currentStatus if self.bottomCollide else 'fall'
     self.currentSpriteIndex = self.currentSpriteIndex +0.2 if self.currentSpriteIndex < len(self.sprites[currentTypeOfImage])-1 else 0;
     self.image = self.sprites[currentTypeOfImage][int(self.currentSpriteIndex)]
-    if self.xSpeed < 0:
+
+    if self.topCollide and self.ySpeed < 0:
+      self.ySpeed = 0
+    
+    if self.rightCollide and self.xSpeed > 0:
+      self.xSpeed = 0
+      if self.ySpeed < 0:
+        self.ySpeed = 0
+    if self.leftCollide and self.xSpeed < 0: 
+      self.xSpeed = 0
+      if self.ySpeed < 0:
+        self.ySpeed = 0
+
+    if not self.bottomCollide:
+      self.ySpeed += 0.2
+    else: 
+      self.ySpeed = 0;
+
+    if self.lastMove < 0:
       self.image = pygame.transform.flip(self.image, True, False)
     if self.ySpeed != 0:
       self.rect.move_ip(0, self.ySpeed)
+
+    if self.xSpeed < 0 and self.rect.x < 5: return # Limite  esquerdo
+    if self.xSpeed > 0 and self.rect.x > 600-self.rect.width: return # Limite  direito
+    self.rect.move_ip(self.xSpeed if self.ySpeed == 0 else self.xSpeed/1.5, 0)
 
   def changeStatus(self, newStatus):
     if newStatus == self.currentStatus: return
@@ -57,11 +83,12 @@ class Player(pygame.sprite.Sprite):
     self.currentSpriteIndex = 0
 
   def run(self, speed):
-    if speed < 0 and self.rect.x < 5: return # Limite  esquerdo
-    if speed > 0 and self.rect.x > 600-self.rect.width: return # Limite  direito
+    self.lastMove = 1 if speed > 0 else -1
+
     self.xSpeed = speed
-    self.rect.move_ip(speed, 0)
     if not self.currentStatus == 'fall': self.changeStatus('run')
   
   def jump(self):
-    self.ySpeed = -8
+    if not self.bottomCollide: return
+    self.ySpeed = -9
+    self.bottomCollide = False
