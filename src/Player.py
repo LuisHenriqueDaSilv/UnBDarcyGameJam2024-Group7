@@ -55,7 +55,11 @@ class Player(pygame.sprite.Sprite):
     self.rect.topleft = 100, 500
 
   def update(self): 
-    currentTypeOfImage = self.currentStatus if self.bottomCollide else 'fall'
+    currentTypeOfImage = self.currentStatus
+    if not self.currentStatus == "attack" and not self.bottomCollide:
+      currentTypeOfImage = 'fall'
+
+
     if self.currentStatus == 'attack' and not self.currentSpriteIndex < len(self.sprites[currentTypeOfImage])-1:
       self.endAttack()
     

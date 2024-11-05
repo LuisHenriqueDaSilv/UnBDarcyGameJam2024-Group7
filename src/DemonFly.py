@@ -10,6 +10,7 @@ class DemonFly(pygame.sprite.Sprite):
     self.xa = xa
     self.xb = xb
     self.y = y
+    self.life = 100
     self.sprites['idle'] = []
     self.sprites['idle'].append(pygame.transform.scale(pygame.image.load('assets/DemonFly/Idle/Demon_Fly_Idle_0.png'), (79, 69)))
     self.sprites['idle'].append(pygame.transform.scale(pygame.image.load('assets/DemonFly/Idle/Demon_Fly_Idle_1.png'), (79, 69)))
@@ -50,14 +51,18 @@ class DemonFly(pygame.sprite.Sprite):
     self.image = self.sprites[self.currentStatus][self.currentSpriteIndex]
 
     self.rect = self.image.get_rect()
-    # self.rect.topleft = 100, 500
     self.rect.topleft = xa, y
 
 
   def update(self): 
-    currentTypeOfImage = self.currentStatus if not self.falling else 'fall'
-    self.currentSpriteIndex = self.currentSpriteIndex +0.2 if self.currentSpriteIndex < len(self.sprites[currentTypeOfImage])-1 else 0;
-    self.image = self.sprites[currentTypeOfImage][int(self.currentSpriteIndex)]
+    print(self.life)
+    if self.currentStatus == 'death' and int(self.currentSpriteIndex) == 6:
+      self.delete();
+
+    if self.currentStatus == 'hurt' and int(self.currentSpriteIndex) == 3:
+      self.changeStatus('idle')
+    self.currentSpriteIndex = self.currentSpriteIndex +0.2 if self.currentSpriteIndex < len(self.sprites[self.currentStatus])-1 else 0;
+    self.image = self.sprites[self.currentStatus][int(self.currentSpriteIndex)]
     self.move()
     if self.xSpeed > 0:
       self.image = pygame.transform.flip(self.image, True, False)
@@ -74,3 +79,23 @@ class DemonFly(pygame.sprite.Sprite):
       self.xSpeed = -1
     
     self.rect.move_ip(self.xSpeed, 0)
+  
+  def hit(self, damage, left):
+    if self.currentStatus != "hurt":
+      self.changeStatus('hurt')
+      knockback = 0;
+      if left == 1:
+        knockback = -20
+      else: 
+        knockback = 20
+      self.rect.move_ip(knockback, 0)
+      self.currentSpriteIndex = 0
+      self.life -= damage
+    if self.life < 0:
+      self.initDeath()
+
+  def initDeath(self):
+    self.changeStatus('death')
+  
+  def delete(self):
+    self.kill()
