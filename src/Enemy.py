@@ -19,6 +19,11 @@ class Enemy(pygame.sprite.Sprite):
 
     self.currentSpriteIndex = self.currentSpriteIndex +0.2 if self.currentSpriteIndex < len(self.sprites[self.currentStatus])-1 else 0;
     self.image = self.sprites[self.currentStatus][int(self.currentSpriteIndex)]
+    x = self.rect.x
+    y = self.rect.y
+    self.rect = self.image.get_rect()
+    self.rect.x = x
+    self.rect.y = y
     moveInY = ySpeed if playerY < SCREEN_HEIGHT/2+10 else 0
 
     if self.currentStatus == 'death': return

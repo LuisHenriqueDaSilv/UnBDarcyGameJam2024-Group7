@@ -1,8 +1,8 @@
 from PIL import Image
 import os
 
-target = "Block"
-path = "OriginalImages/Block/"
+target = "IdleWizard"
+path = "OriginalImages/idleWizard/"
 files = os.listdir(path)
 for file in files:
   image=Image.open(f'{path}{file}')

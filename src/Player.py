@@ -16,6 +16,8 @@ class Player(pygame.sprite.Sprite):
     self.lastMove = 1
     self.sprites = {}
     self.falling = False
+
+    self.dead = False;
     self.sprites['idle'] = []
     self.sprites['idle'].append(pygame.transform.scale(pygame.image.load('assets/HeroKnight/Idle/HeroKnight_Idle_0.png'), (44*1.7, 40*1.7)))
     self.sprites['idle'].append(pygame.transform.scale(pygame.image.load('assets/HeroKnight/Idle/HeroKnight_Idle_1.png'), (44*1.7, 40*1.7)))
@@ -75,6 +77,12 @@ class Player(pygame.sprite.Sprite):
     self.sprites['block'].append(pygame.transform.scale(pygame.image.load('assets/HeroKnight/Block/HeroKnight_Block_2.png'), (44*1.7, 40*1.7)))
     self.sprites['block'].append(pygame.transform.scale(pygame.image.load('assets/HeroKnight/Block/HeroKnight_Block_3.png'), (44*1.7, 40*1.7)))
     self.sprites['block'].append(pygame.transform.scale(pygame.image.load('assets/HeroKnight/Block/HeroKnight_Block_4.png'), (44*1.7, 40*1.7)))
+
+    self.sprites['hurt'] = []                          
+    self.sprites['hurt'].append(pygame.transform.scale(pygame.image.load('assets/HeroKnight/Hurt/HeroKnight_Hurt_0.png'), (44*1.7, 40*1.7)))
+    self.sprites['hurt'].append(pygame.transform.scale(pygame.image.load('assets/HeroKnight/Hurt/HeroKnight_Hurt_1.png'), (44*1.7, 40*1.7)))
+    self.sprites['hurt'].append(pygame.transform.scale(pygame.image.load('assets/HeroKnight/Hurt/HeroKnight_Hurt_2.png'), (44*1.7, 40*1.7)))
+
     self.currentSpriteIndex = 0
     self.image = self.sprites[self.currentStatus][self.currentSpriteIndex]
 
@@ -94,9 +102,12 @@ class Player(pygame.sprite.Sprite):
     
     if self.currentStatus == "block" and int(self.currentSpriteIndex) == len(self.sprites[currentTypeOfImage])-1:
       self.changeStatus('idle')
+    
+    if self.currentStatus == "hurt" and int(self.currentSpriteIndex) == len(self.sprites[currentTypeOfImage])-1:
+      self.changeStatus('idle')
 
     if self.currentStatus == 'death' and int(self.currentSpriteIndex) == 5:
-      pygame.quit()
+      self.dead = True
 
 
     self.currentSpriteIndex = self.currentSpriteIndex +0.2 if self.currentSpriteIndex < len(self.sprites[currentTypeOfImage])-1 else 0;
@@ -163,9 +174,9 @@ class Player(pygame.sprite.Sprite):
       self.changeStatus("block")
       return
     self.life -= damage
+    self.changeStatus("hurt")
     if self.life < 0:
       self.changeStatus('death')
-      print("Morreu")
 
   def defense(self):
     if self.currentStatus != "blockIdle":

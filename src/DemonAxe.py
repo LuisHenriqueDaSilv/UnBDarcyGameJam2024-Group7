@@ -14,7 +14,7 @@ class DemonAxe(Enemy):
     self.attackRange = 40
     self.damage = 0.75 #0.5
     self.attackDelay = FPS
-    self.knockback = 0
+    self.knockback = 5
     self.sprites = {}
     self.sprites['idle'] = []
     self.sprites['idle'].append(pygame.transform.scale(pygame.image.load('assets/DemonAxe/Idle/idle_1.png'), (24*2.4, 39*2.4)))
@@ -63,7 +63,3 @@ class DemonAxe(Enemy):
   def update(self, playerY, ySpeed, player):
     super().update(playerY, ySpeed, player)
     self.image = pygame.transform.flip(self.image, True, False)
-    # if self.currentStatus == "attack" and int(self.currentSpriteIndex) == 0:
-    #   self.rect.move_ip(0, -1)
-    # if self.currentStatus == "attack" and int(self.currentSpriteIndex)) == 1:
-    #   self.rect.move_ip(0, -3)
