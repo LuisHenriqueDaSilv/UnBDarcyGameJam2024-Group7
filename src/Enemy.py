@@ -6,7 +6,7 @@ class Enemy(pygame.sprite.Sprite):
   def __init__(self):
     pygame.sprite.Sprite.__init__(self)
 
-  def update(self, playerY, ySpeed, player): 
+  def update(self, playerY, ySpeed, player):
     if self.attackDelay > 0 and self.currentStatus != "attack":
       self.attackDelay-=1
     if self.currentStatus == 'death' and int(self.currentSpriteIndex) == len(self.sprites['death'])-1:
@@ -21,29 +21,36 @@ class Enemy(pygame.sprite.Sprite):
     self.image = self.sprites[self.currentStatus][int(self.currentSpriteIndex)]
     moveInY = ySpeed if playerY < SCREEN_HEIGHT/2+10 else 0
 
+    if self.currentStatus == 'death': return
+
     playerIsInRange = self.testIfPlayerInRange(player)
     playerIsInAttackRange = self.testIfPlayerInAttackRange(player)
-
 
     if self.currentStatus == 'attack':
       if player.rect.x > self.rect.x:
         self.image = pygame.transform.flip(self.image, True, False)
       self.xSpeed = 0
-    elif playerIsInAttackRange and not self.currentStatus == "death":
+    elif playerIsInAttackRange and self.currentStatus != "hurt":
+      self.changeStatus('idle' if self.sprites['idle'] else 'walking')
       self.xSpeed = 0
       if self.currentStatus != "attack" and self.attackDelay <= 0:
         self.changeStatus('attack')
-    elif playerIsInRange:
+    elif playerIsInRange and self.currentStatus != "hurt":
+      self.changeStatus("walking")
       if player.rect.x > self.rect.x:
         self.xSpeed = 1
       else:
         self.xSpeed = -1
-    elif self.rect.x <= self.xa:
+    elif self.rect.x <= self.xa and self.currentStatus != "hurt":
       self.xSpeed = 1
-    elif self.rect.x >= self.xb:
+    elif self.rect.x >= self.xb and self.currentStatus != "hurt":
       self.xSpeed = -1
-    elif self.xSpeed == 0:
+    elif self.xSpeed == 0 and self.currentStatus != "hurt":
       self.xSpeed = 1
+    elif self.currentStatus == "hurt":
+      self.xSpeed = 0
+    elif self.currentStatus != "hurt":
+      self.changeStatus("walking")
     
     self.move(moveInY )
     if self.xSpeed > 0:
@@ -62,6 +69,7 @@ class Enemy(pygame.sprite.Sprite):
   def hit(self, damage, left):
     if self.currentStatus == 'death': return
     if self.currentStatus != "hurt":
+      self.attackDelay = FPS
       self.changeStatus('hurt')
       knockback = 0;
       if left == 1:
@@ -81,16 +89,12 @@ class Enemy(pygame.sprite.Sprite):
     self.kill()
   
   def testIfPlayerInRange(self, player):
-    print("==========")
-    print(self.rect.y, player.rect.y)
-    print(self.ysAttack, self.yeAttack)
-    print(self.xsAttack, self.xeAttack)
     playerMid = player.rect.y-player.rect.height/2
-    return player.rect.x > self.xsAttack and player.rect.x < self.xeAttack and playerMid < self.ysAttack and playerMid > self.yeAttack
+    return player.rect.x > self.xa and player.rect.x < self.xb and playerMid < self.rect.y and playerMid > self.rect.y-self.rect.height
   
   def testIfPlayerInAttackRange(self, player): 
     playerMidY = player.rect.y
-    playerMidX = player.rect.x
+    playerMidX = player.rect.x  
     return(playerMidX + self.attackRange > self.rect.x and playerMidX - self.attackRange < self.rect.x ) and (
       playerMidY + self.attackRange > self.rect.y and playerMidY - self.attackRange < self.rect.y
     )

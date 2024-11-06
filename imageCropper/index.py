@@ -1,8 +1,8 @@
 from PIL import Image
 import os
 
-target = "Death"
-path = "OriginalImages/Death/"
+target = "Block"
+path = "OriginalImages/Block/"
 files = os.listdir(path)
 for file in files:
   image=Image.open(f'{path}{file}')

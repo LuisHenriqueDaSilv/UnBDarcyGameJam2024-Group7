@@ -9,6 +9,9 @@ class Island(pygame.sprite.Sprite):
     self.sprites['left'] = pygame.transform.scale(pygame.image.load('assets/Island/left.png'), (128/2.5, 128/2.5))
     self.sprites['mid'] = pygame.transform.scale(pygame.image.load('assets/Island/mid.png'), (128/2.5, 128/2.5))
     self.sprites['right'] = pygame.transform.scale(pygame.image.load('assets/Island/right.png'), (128/2.5, 128/2.5))
+    self.sprites['leftGrass'] = pygame.transform.scale(pygame.image.load('assets/Island/leftGrass.png'), (128/2.5, 128/2.5))
+    self.sprites['midGrass'] = pygame.transform.scale(pygame.image.load('assets/Island/midGrass.png'), (128/2.5, 128/2.5))
+    self.sprites['rightGrass'] = pygame.transform.scale(pygame.image.load('assets/Island/rightGrass.png'), (128/2.5, 128/2.5))
     self.sprites['ground'] = pygame.transform.scale(pygame.image.load('assets/Island/ground.png'), (128/2.5, 128/2.5))
     
     self.image = self.sprites[type]

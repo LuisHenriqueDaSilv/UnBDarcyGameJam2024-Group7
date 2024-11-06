@@ -1,5 +1,5 @@
 import pygame
-from settings import SCREEN_HEIGHT
+from settings import SCREEN_HEIGHT, FPS
 
 class Player(pygame.sprite.Sprite):
   def __init__(self):
@@ -10,6 +10,7 @@ class Player(pygame.sprite.Sprite):
     self.topCollide = False
     self.leftCollide = False
     self.rightCollide = False
+    self.attackDelay = FPS+30
     self.xSpeed = 0;
     self.ySpeed = 0;
     self.lastMove = 1
@@ -57,6 +58,23 @@ class Player(pygame.sprite.Sprite):
     self.sprites['death'].append(pygame.transform.scale(pygame.image.load('assets/HeroKnight/Death/HeroKnight_Death_3.png'), (53*1.7, 39*1.7)))
     self.sprites['death'].append(pygame.transform.scale(pygame.image.load('assets/HeroKnight/Death/HeroKnight_Death_4.png'), (55*1.7, 34*1.7)))
     self.sprites['death'].append(pygame.transform.scale(pygame.image.load('assets/HeroKnight/Death/HeroKnight_Death_5.png'), (55*1.7, 31*1.7)))
+
+    self.sprites['blockIdle'] = []                          
+    self.sprites['blockIdle'].append(pygame.transform.scale(pygame.image.load('assets/HeroKnight/BlockIdle/HeroKnight_Block Idle_0.png'), (44*1.7, 40*1.7)))
+    self.sprites['blockIdle'].append(pygame.transform.scale(pygame.image.load('assets/HeroKnight/BlockIdle/HeroKnight_Block Idle_1.png'), (44*1.7, 40*1.7)))
+    self.sprites['blockIdle'].append(pygame.transform.scale(pygame.image.load('assets/HeroKnight/BlockIdle/HeroKnight_Block Idle_2.png'), (44*1.7, 40*1.7)))
+    self.sprites['blockIdle'].append(pygame.transform.scale(pygame.image.load('assets/HeroKnight/BlockIdle/HeroKnight_Block Idle_3.png'), (44*1.7, 40*1.7)))
+    self.sprites['blockIdle'].append(pygame.transform.scale(pygame.image.load('assets/HeroKnight/BlockIdle/HeroKnight_Block Idle_4.png'), (44*1.7, 40*1.7)))
+    self.sprites['blockIdle'].append(pygame.transform.scale(pygame.image.load('assets/HeroKnight/BlockIdle/HeroKnight_Block Idle_5.png'), (44*1.7, 40*1.7)))
+    self.sprites['blockIdle'].append(pygame.transform.scale(pygame.image.load('assets/HeroKnight/BlockIdle/HeroKnight_Block Idle_6.png'), (44*1.7, 40*1.7)))
+    self.sprites['blockIdle'].append(pygame.transform.scale(pygame.image.load('assets/HeroKnight/BlockIdle/HeroKnight_Block Idle_7.png'), (44*1.7, 40*1.7)))
+
+    self.sprites['block'] = []                          
+    self.sprites['block'].append(pygame.transform.scale(pygame.image.load('assets/HeroKnight/Block/HeroKnight_Block_0.png'), (44*1.7, 40*1.7)))
+    self.sprites['block'].append(pygame.transform.scale(pygame.image.load('assets/HeroKnight/Block/HeroKnight_Block_1.png'), (44*1.7, 40*1.7)))
+    self.sprites['block'].append(pygame.transform.scale(pygame.image.load('assets/HeroKnight/Block/HeroKnight_Block_2.png'), (44*1.7, 40*1.7)))
+    self.sprites['block'].append(pygame.transform.scale(pygame.image.load('assets/HeroKnight/Block/HeroKnight_Block_3.png'), (44*1.7, 40*1.7)))
+    self.sprites['block'].append(pygame.transform.scale(pygame.image.load('assets/HeroKnight/Block/HeroKnight_Block_4.png'), (44*1.7, 40*1.7)))
     self.currentSpriteIndex = 0
     self.image = self.sprites[self.currentStatus][self.currentSpriteIndex]
 
@@ -64,6 +82,8 @@ class Player(pygame.sprite.Sprite):
     self.rect.topleft = 100, 500
 
   def update(self): 
+    if self.attackDelay > 0:
+      self.attackDelay -= 1
     currentTypeOfImage = self.currentStatus
     if not self.currentStatus == "attack" and not self.bottomCollide :
       currentTypeOfImage = 'fall'
@@ -71,6 +91,9 @@ class Player(pygame.sprite.Sprite):
       self.endAttack()
     if self.currentStatus == 'attack' and int(self.currentSpriteIndex) == 2 and self.lastMove < 0: 
       self.rect.move_ip(-4, 0)
+    
+    if self.currentStatus == "block" and int(self.currentSpriteIndex) == len(self.sprites[currentTypeOfImage])-1:
+      self.changeStatus('idle')
 
     if self.currentStatus == 'death' and int(self.currentSpriteIndex) == 5:
       pygame.quit()
@@ -90,6 +113,8 @@ class Player(pygame.sprite.Sprite):
       self.xSpeed = 0
       if self.ySpeed < 0:
         self.ySpeed = 0
+    if self.currentStatus == "blockIdle":
+      self.xSpeed = 0
 
     if not self.bottomCollide:
       self.ySpeed += 0.2
@@ -123,15 +148,25 @@ class Player(pygame.sprite.Sprite):
     self.bottomCollide = False
   
   def attack(self):
+    if self.currentStatus == 'attack': return 
+    if self.attackDelay > 0: return
     if self.bottomCollide:
       self.xSpeed = 0
     self.changeStatus('attack')
+    self.attackDelay = FPS+30
   
   def endAttack(self):
     self.changeStatus('idle')
 
   def hit(self, damage):
+    if self.currentStatus == 'blockIdle' or self.currentStatus == "block":
+      self.changeStatus("block")
+      return
     self.life -= damage
     if self.life < 0:
       self.changeStatus('death')
       print("Morreu")
+
+  def defense(self):
+    if self.currentStatus != "blockIdle":
+      self.changeStatus("blockIdle")

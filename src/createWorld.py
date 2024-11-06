@@ -66,3 +66,75 @@ def createWorld(spriteGroup):
   spriteGroup.add(Island('mid', 500, SCREEN_HEIGHT -1450))
   spriteGroup.add(Island('mid', 550, SCREEN_HEIGHT -1450))
   spriteGroup.add(Island('mid', 600, SCREEN_HEIGHT -1450))
+
+  spriteGroup.add(Island('left', 250, SCREEN_HEIGHT -1600 ))
+  spriteGroup.add(Island('right', 300, SCREEN_HEIGHT -1600 ))
+
+  spriteGroup.add(Island('mid', midIsland.rect.width, SCREEN_HEIGHT -1750 ))
+  spriteGroup.add(Island('mid', midIsland.rect.width*2, SCREEN_HEIGHT -1750 ))
+  spriteGroup.add(Island('right', midIsland.rect.width*3, SCREEN_HEIGHT -1750 ))
+
+  
+  spriteGroup.add(Island('right', midIsland.rect.width, SCREEN_HEIGHT -1870 ))
+  
+  spriteGroup.add(Island('left', 250, SCREEN_HEIGHT -1950 ))
+  spriteGroup.add(Island('mid', 300, SCREEN_HEIGHT -1950 ))
+  spriteGroup.add(Island('mid', 350, SCREEN_HEIGHT -1950 ))
+  spriteGroup.add(Island('right', 400, SCREEN_HEIGHT -1950 ))
+
+  spriteGroup.add(Island('left', 500, SCREEN_HEIGHT - 2080))
+  spriteGroup.add(Island('right', 550, SCREEN_HEIGHT - 2080))
+
+  spriteGroup.add(Island('left', 200, SCREEN_HEIGHT - 2200))
+  spriteGroup.add(Island('mid', 250, SCREEN_HEIGHT - 2200))
+  spriteGroup.add(Island('right', 300, SCREEN_HEIGHT - 2200))
+  
+
+
+  spriteGroup.add(Island('midGrass', midIsland.rect.width, SCREEN_HEIGHT - 2350))
+  spriteGroup.add(Island('midGrass', midIsland.rect.width*2, SCREEN_HEIGHT - 2350))
+  spriteGroup.add(Island('rightGrass', midIsland.rect.width*3, SCREEN_HEIGHT - 2350))
+  spriteGroup.add(Island('midGrass', 600, SCREEN_HEIGHT - 2350))
+  spriteGroup.add(Island('midGrass', 550, SCREEN_HEIGHT - 2350))
+  spriteGroup.add(Island('leftGrass', 500, SCREEN_HEIGHT - 2350))
+
+
+  #starsky
+
+  spriteGroup.add(Island('leftGrass', 250, SCREEN_HEIGHT -2500))
+  spriteGroup.add(Island('midGrass', 300, SCREEN_HEIGHT - 2500))
+  spriteGroup.add(Island('rightGrass', 350, SCREEN_HEIGHT  -2500))
+
+  spriteGroup.add(Island('leftGrass', midIsland.rect.width, SCREEN_HEIGHT - 2650))
+  spriteGroup.add(Island('rightGrass', midIsland.rect.width*2, SCREEN_HEIGHT - 2650))
+
+  spriteGroup.add(Island('leftGrass', 550, SCREEN_HEIGHT - 2650))
+  spriteGroup.add(Island('rightGrass', 600, SCREEN_HEIGHT - 2650))
+
+  spriteGroup.add(Island('leftGrass', 200, SCREEN_HEIGHT - 2800 ))
+  spriteGroup.add(Island('midGrass', 250, SCREEN_HEIGHT - 2800 ))
+  spriteGroup.add(Island('midGrass', 300, SCREEN_HEIGHT - 2800 ))
+  spriteGroup.add(Island('midGrass', 350, SCREEN_HEIGHT - 2800 ))
+  spriteGroup.add(Island('midGrass', 400, SCREEN_HEIGHT - 2800 ))
+  spriteGroup.add(Island('rightGrass', 450, SCREEN_HEIGHT - 2800 ))
+
+  spriteGroup.add(Island('midGrass', 600, SCREEN_HEIGHT-2950))
+  spriteGroup.add(Island('leftGrass', 550, SCREEN_HEIGHT-2950))
+
+  spriteGroup.add(Island('leftGrass', 50, SCREEN_HEIGHT - 2970))
+  spriteGroup.add(Island('midGrass', 100, SCREEN_HEIGHT - 2970))
+  spriteGroup.add(Island('rightGrass', 150, SCREEN_HEIGHT - 2970))
+
+  spriteGroup.add(Island('leftGrass', 300, SCREEN_HEIGHT-3100 ))
+  spriteGroup.add(Island('rightGrass', 350, SCREEN_HEIGHT-3100 ))
+  
+  spriteGroup.add(Island('rightGrass', 550,SCREEN_HEIGHT-3250 ))
+  spriteGroup.add(Island('midGrass', 500,SCREEN_HEIGHT-3250 ))
+  spriteGroup.add(Island('leftGrass', 450,SCREEN_HEIGHT-3250 ))
+
+  spriteGroup.add(Island('leftGrass', 100, SCREEN_HEIGHT - 3420))
+  spriteGroup.add(Island('midGrass', 150, SCREEN_HEIGHT - 3420))
+  spriteGroup.add(Island('midGrass', 200, SCREEN_HEIGHT - 3420 ))
+  spriteGroup.add(Island('midGrass', 250, SCREEN_HEIGHT - 3420 ))
+  spriteGroup.add(Island('midGrass', 300, SCREEN_HEIGHT - 3420 ))
+  spriteGroup.add(Island('rightGrass', 350, SCREEN_HEIGHT - 3420))
