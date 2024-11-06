@@ -62,4 +62,5 @@ class DemonAxe(Enemy):
 
   def update(self, playerY, ySpeed, player):
     super().update(playerY, ySpeed, player)
+    print("aaaaaaaaaaaaaaaaa")
     self.image = pygame.transform.flip(self.image, True, False)

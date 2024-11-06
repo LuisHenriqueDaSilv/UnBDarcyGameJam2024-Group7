@@ -81,6 +81,10 @@ class Enemy(pygame.sprite.Sprite):
     self.kill()
   
   def testIfPlayerInRange(self, player):
+    print("==========")
+    print(self.rect.y, player.rect.y)
+    print(self.ysAttack, self.yeAttack)
+    print(self.xsAttack, self.xeAttack)
     playerMid = player.rect.y-player.rect.height/2
     return player.rect.x > self.xsAttack and player.rect.x < self.xeAttack and playerMid < self.ysAttack and playerMid > self.yeAttack
   
