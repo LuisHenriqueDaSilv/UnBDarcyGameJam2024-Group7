@@ -6,6 +6,7 @@ from src.Background import Background
 from src.createWorld import createWorld
 from src.createEnemies import createEnemies
 from src.lifeBar import LifeBar
+from src.History import History
 from settings import *
 
 from settings import SCREEN_HEIGHT, SCREEN_WIDTH
@@ -31,6 +32,7 @@ for sound in ambient_sounds:
 
 #coloca dentro do def main()
 
+history = History()
 
 restart = True
 def main():
@@ -72,6 +74,10 @@ def main():
 
   running = True
   while running:
+
+    # historyMovie = history.update(screen)
+    # if historyMovie: continue
+
 
     clock.tick(FPS) 
     screen.fill((0, 0, 0))
