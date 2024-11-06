@@ -93,7 +93,7 @@ class Player(pygame.sprite.Sprite):
     if self.attackDelay > 0:
       self.attackDelay -= 1
     currentTypeOfImage = self.currentStatus
-    if not self.currentStatus == "attack" and not self.bottomCollide :
+    if not self.currentStatus == "attack" and not self.bottomCollide and self.currentStatus != "death" :
       currentTypeOfImage = 'fall'
     if self.currentStatus == 'attack' and not self.currentSpriteIndex < len(self.sprites[currentTypeOfImage])-1:
       self.endAttack()
@@ -160,6 +160,7 @@ class Player(pygame.sprite.Sprite):
   
   def attack(self):
     if self.currentStatus == 'attack': return 
+    if self.currentStatus == 'hurt': return 
     if self.attackDelay > 0: return
     if self.bottomCollide:
       self.xSpeed = 0

@@ -2,6 +2,8 @@ import pygame
 from .Enemy import Enemy
 from settings import FPS
 
+
+
 class DemonAxe(Enemy):
   def __init__(self, y, xa, xb, xsAttack = None, xeAttack=None, ysAttack=None, yeAttack=None):
     pygame.sprite.Sprite.__init__(self)
@@ -16,6 +18,12 @@ class DemonAxe(Enemy):
     self.attackDelay = FPS
     self.knockback = 5
     self.sprites = {}
+
+    self.deathSound = pygame.mixer.Sound('song/EnemySonds/DeathDemonAxe.wav')
+    self.deathSound.set_volume(1.0)
+    self.attackSound = pygame.mixer.Sound('song/EnemySonds/AttackDemonAxe.wav')
+    self.attackSound.set_volume(1.0)
+
     self.sprites['idle'] = []
     self.sprites['idle'].append(pygame.transform.scale(pygame.image.load('assets/DemonAxe/Idle/idle_1.png'), (24*2.4, 39*2.4)))
     self.sprites['idle'].append(pygame.transform.scale(pygame.image.load('assets/DemonAxe/Idle/idle_2.png'), (24*2.4, 39*2.4)))
@@ -63,3 +71,11 @@ class DemonAxe(Enemy):
   def update(self, playerY, ySpeed, player):
     super().update(playerY, ySpeed, player)
     self.image = pygame.transform.flip(self.image, True, False)
+  
+  def changeStatus(self, newStatus):
+    if newStatus == self.currentStatus: return
+    if newStatus == 'death':
+      self.deathSound.play()
+    if newStatus == 'attack':
+      self.attackSound.play()
+    super().changeStatus(newStatus)

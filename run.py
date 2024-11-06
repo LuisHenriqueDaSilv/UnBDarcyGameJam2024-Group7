@@ -1,4 +1,5 @@
 import pygame
+import random
 
 from src.Player import Player
 from src.Background import Background
@@ -14,8 +15,26 @@ screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 clock = pygame.time.Clock()
 hitSound = pygame.mixer.Sound('song/hitSound.wav')
 
+ambient_sounds = [
+    pygame.mixer.Sound('song/AmbientSound/AmbientSound 1.wav'),
+    pygame.mixer.Sound('song/AmbientSound/AmbientSound 2.wav'),
+    pygame.mixer.Sound('song/AmbientSound/AmbientSound 3.wav'),
+    pygame.mixer.Sound('song/AmbientSound/AmbientSound 4.wav'),
+    pygame.mixer.Sound('song/AmbientSound/AmbientSound 5.wav'),
+    pygame.mixer.Sound('song/AmbientSound/AmbientSound 6.wav'),
+    pygame.mixer.Sound('song/AmbientSound/AmbientSound 7.wav'),
+    pygame.mixer.Sound('song/AmbientSound/AmbientSound 8.wav'),
+]
+
+for sound in ambient_sounds:
+    sound.set_volume(0.7)
+
+#coloca dentro do def main()
+
+
 restart = True
 def main():
+  next_ambient_sound_time = pygame.time.get_ticks() + random.randint(30000, 45000)
   mostrar_frase = True
   inicio_jogo = False
 
@@ -56,6 +75,11 @@ def main():
 
     clock.tick(FPS) 
     screen.fill((0, 0, 0))
+    current_time = pygame.time.get_ticks()
+    if current_time >= next_ambient_sound_time:
+      print("Random")
+      random.choice(ambient_sounds).play()
+      next_ambient_sound_time = current_time + random.randint(30000, 45000)
 
     if player.dead:  # Se o jogador morreu, exibe a tela de Game Over
         backgroundGroup.draw(screen)
@@ -102,16 +126,6 @@ def main():
     player.topCollide = topCollide
     player.leftCollide = leftCollide
     player.rightCollide = rightCollide
-      
-    playerCollidesWithEnemies = pygame.sprite.spritecollide(player, enemiesGroup, False)
-    for enemie in playerCollidesWithEnemies:
-      if player.currentStatus == 'attack':
-        if player.lastMove > 0: 
-          enemie.hit(15, 0)
-        else:
-          enemie.hit(15, 1)
-      elif enemie.currentStatus == 'attack':
-        player.hit(enemie.damage)
 
     if inicio_jogo:
         playerCollidesWithEnemies = pygame.sprite.spritecollide(player, enemiesGroup, False)
@@ -132,8 +146,8 @@ def main():
             player.run(5)
         elif key[pygame.K_f] and not player.currentStatus == 'death':
             player.attack()
-            hitSound.set_volume(1)
-            hitSound.play()
+            # hitSound.set_volume(1)
+            # hitSound.play()
         elif key[pygame.K_e] and player.currentStatus != "attack" and not player.currentStatus == 'death' and player.currentStatus != "block":
           player.defense()
         elif player.bottomCollide and not player.currentStatus == 'attack' and not player.currentStatus == 'death' and player.currentStatus != 'block' and not player.currentStatus == 'hurt':
@@ -149,9 +163,9 @@ def main():
             running = False
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_RETURN:
-                # Ao pressionar Enter, a música toca e o jogo começa
-                mostrar_frase = False
-                inicio_jogo = True
+              # Ao pressionar Enter, a música toca e o jogo começa
+              mostrar_frase = False
+              inicio_jogo = True
 
 
     backgroundGroup.draw(screen)

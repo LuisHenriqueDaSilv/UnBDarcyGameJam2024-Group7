@@ -16,6 +16,12 @@ class Wizard(Enemy):
     self.attackDelay = FPS
     self.knockback = 5
     self.sprites = {}
+
+    self.deathSound = pygame.mixer.Sound('song/EnemySonds/DeathWizard.wav')
+    self.deathSound.set_volume(1.0)
+    self.attackSound = pygame.mixer.Sound('song/EnemySonds/AttackWizard.wav')
+    self.attackSound.set_volume(1.0)
+
     self.sprites['idle'] = []
     self.sprites['idle'].append(pygame.transform.scale(pygame.image.load('assets/Wizard/Idle/Idle_1.png'), (24*2.4, 39*2.4)))
     self.sprites['idle'].append(pygame.transform.scale(pygame.image.load('assets/Wizard/Idle/Idle_2.png'), (24*2.4, 39*2.4)))
@@ -62,8 +68,6 @@ class Wizard(Enemy):
     self.sprites['death'].append(pygame.transform.scale(pygame.image.load('assets/Wizard/Death/Death_6.png'), (24*2.4, 38*2.4)))
     self.sprites['death'].append(pygame.transform.scale(pygame.image.load('assets/Wizard/Death/Death_7.png'), (24*2.4, 38*2.4)))
 
-
-
     self.currentSpriteIndex = 0
     self.image = self.sprites[self.currentStatus][self.currentSpriteIndex]
 
@@ -79,3 +83,12 @@ class Wizard(Enemy):
     super().update(playerY, ySpeed, player)
     if self.currentStatus != "hurt" and self.currentStatus != "idle":
       self.image = pygame.transform.flip(self.image, True, False)
+  
+  def changeStatus(self, newStatus):
+    if newStatus == self.currentStatus: return
+    if newStatus == 'death':
+      print("Death")
+      self.deathSound.play()
+    if newStatus == 'attack':
+      self.attackSound.play()
+    super().changeStatus(newStatus)
