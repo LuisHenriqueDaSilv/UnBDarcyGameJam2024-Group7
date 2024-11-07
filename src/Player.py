@@ -170,7 +170,7 @@ class Player(pygame.sprite.Sprite):
     if not self.currentStatus == 'fall': self.changeStatus('run')
   
   def jump(self):
-    if not self.bottomCollide: return
+    # if not self.bottomCollide: return
     self.ySpeed = -9
     self.bottomCollide = False
   

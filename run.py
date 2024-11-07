@@ -7,6 +7,7 @@ from src.createWorld import createWorld
 from src.createEnemies import createEnemies
 from src.lifeBar import LifeBar
 from src.Cutscene import History
+from src.EndGame import EndGame
 from settings import *
 
 from settings import SCREEN_HEIGHT, SCREEN_WIDTH
@@ -29,11 +30,15 @@ ambient_sounds = [
 for sound in ambient_sounds:
     sound.set_volume(0.7)
 
-
-history = History(screen)
-
 restart = True
-def main():
+def main(pastHistory=None):
+  justDead = False
+  
+  history = None
+  if pastHistory:
+    history = pastHistory
+  else: history = History(screen)
+
   loadWorld = False
   freeToPlay= False
   next_ambient_sound_time = pygame.time.get_ticks() + random.randint(30000, 45000)
@@ -45,7 +50,9 @@ def main():
   enemiesGroup = pygame.sprite.Group()
   backgroundGroup = pygame.sprite.Group()
   lifebarGroup = pygame.sprite.Group()
+  endGameGroup = pygame.sprite.Group()
 
+  endGameGroup.add(EndGame(-SCREEN_HEIGHT-4800))
   dirtBaseBackground = Background(0, 'dirt')
   florestBackbackground = Background(0, 'florest')
   skyBackbackground = Background(0, 'sky')
@@ -59,6 +66,7 @@ def main():
   backgroundGroup.add(Background(skyInit-3*skyBackbackground.rect.height, 'sky'))
   backgroundGroup.add(Background(skyInit-4*skyBackbackground.rect.height, 'sky'))
   backgroundGroup.add(Background(skyInit-5*skyBackbackground.rect.height, 'sky'))
+  
 
   game_over_image = pygame.image.load('assets/gameOver.png')
   game_over_image = pygame.transform.scale(game_over_image, (400, 390))
@@ -79,25 +87,24 @@ def main():
   running = True
   while running:
     clock.tick(FPS)
+    events = pygame.event.get()
+    for event in events:
+        if event.type == pygame.QUIT:
+            running = False
+    if history.endded:
+      restart = True
+      running = False
 
     if not inicio_jogo:    
-      for event in pygame.event.get():
+      for event in events:
           if event.type == pygame.QUIT:
               running = False
           elif event.type == pygame.KEYDOWN:
               if event.key == pygame.K_RETURN:
                 inicio_jogo = True
-    # if loadWorld: 
-    #   print("Carrega o mundo")
-    #   for background in backgroundGroup:
-    #     background.update(player.rect.y, player.ySpeed)
-    #   backgroundGroup.draw(screen)
-    #   for floor in floorGroup: 
-    #     floor.update(player.rect.y, player.ySpeed)
-    #   floorGroup.draw(screen)
 
-
-    freeToPlay = history.update(not inicio_jogo)
+    history.player = player
+    freeToPlay = history.update(events, not inicio_jogo)
 
     if not inicio_jogo:       
       fonte = pygame.font.SysFont('arial', 40, True, False)
@@ -126,15 +133,20 @@ def main():
           gameOverSound.play()  # Toca o som de Game Over apenas uma vez
 
       # Espera até que o jogador pressione uma tecla para sair ou reiniciar
-      for event in pygame.event.get():
+      for event in events:
           if event.type == pygame.QUIT:
               running = False
               restart = False
           elif event.type == pygame.KEYDOWN:
               restart = True
               running = False
+              justDead = True
               player.dead = False  # Ou pode ser continue se quiser reiniciar o jogo
       continue  # Pula as atualizações do jogo e exibe o Game Over
+
+    collideWithEnd = pygame.sprite.spritecollide(player, endGameGroup, False)
+    if collideWithEnd: 
+      history.end()
 
     playerCollidesWithFloor = pygame.sprite.spritecollide(player, floorGroup, False)
     leftCollide = False
@@ -163,7 +175,6 @@ def main():
     player.leftCollide = leftCollide
     player.rightCollide = rightCollide
 
-    # if inicio_jogo:
     playerCollidesWithEnemies = pygame.sprite.spritecollide(player, enemiesGroup, False)
     for enemie in playerCollidesWithEnemies:
         if player.currentStatus == 'attack':
@@ -193,6 +204,11 @@ def main():
     if key[pygame.K_SPACE] and not player.currentStatus == 'death':
         player.jump()
 
+
+    endGameGroup.draw(screen)
+    for end in endGameGroup:
+      end.update(player.rect.y, player.ySpeed)  
+
     allSprites.update()
     allSprites.draw(screen)
 
@@ -206,15 +222,20 @@ def main():
     for background in backgroundGroup:
       background.update(player.rect.y, player.ySpeed)
 
+
+
     enemiesGroup.draw(screen)
     pygame.draw.rect(screen, (255, 0, 0), (17, 15.5, 161.5 * player.life / 100, 30))
     lifebarGroup.draw(screen)
-    lifebarGroup.update()  
-
+    lifebarGroup.update()
 
     pygame.display.flip()
+
   if restart:
-    main()
+    if justDead:
+      main(history)
+    else: 
+      main()
 
 main()
 

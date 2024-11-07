@@ -10,6 +10,10 @@ class History():
     self.screen = screen
     self.step = 1
     self.subStep = 0
+    self.endded = 0
+
+    self.winsound = pygame.mixer.Sound('song/GameWinner.wav')
+    self.winsound.set_volume(1.0)
 
     self.well = pygame.transform.scale(pygame.image.load('assets/history/scene1/Well.png'), (480/3, 480/3))
     self.lantern = pygame.transform.scale(pygame.image.load('assets/history/scene1/Street_Lantern.png'), (480/2.5, 480/2))
@@ -41,14 +45,14 @@ class History():
     self.screen.blit(self.dialogueBlock, (0, SCREEN_HEIGHT-200))
     fonte = pygame.font.SysFont('arial', 20, True, False)
     texto_formatado = fonte.render(line1, False, (48, 47, 42))
-    self.screen.blit(texto_formatado, (50, SCREEN_HEIGHT-140))
+    self.screen.blit(texto_formatado, (20, SCREEN_HEIGHT-140))
     texto_formatado = fonte.render(line2, False, (48, 47, 42))
-    self.screen.blit(texto_formatado, (50, SCREEN_HEIGHT-110))
+    self.screen.blit(texto_formatado, (20, SCREEN_HEIGHT-110))
     texto_formatado = fonte.render(author, False, (233, 233, 233))
     self.screen.blit(texto_formatado, (110, SCREEN_HEIGHT-183))
     
 
-  def scene1(self, paused =False):
+  def scene1(self, events, paused =False):
 
     midIsland = Island('mid', 0, 0)
     numberOfIslands = SCREEN_WIDTH/midIsland.rect.width
@@ -64,9 +68,10 @@ class History():
     self.screen.blit(self.cart, (0, SCREEN_HEIGHT/1.5-self.cart.get_rect().height))
     self.screen.blit(self.logoGame, (100, 10))
 
+    if not self.endded:
+      self.personsGroup.update()
+      self.personsGroup.draw(self.screen)
 
-    self.personsGroup.update()
-    self.personsGroup.draw(self.screen)
     if not paused:
       if self.subStep == 0:
         if self.killer.rect.x<200:
@@ -78,57 +83,57 @@ class History():
       elif self.subStep == 1:
         self.dialogue("Aegir:", "Finalmente encontrei você… desertor")
 
-        for event in pygame.event.get():
+        for event in events:
           if event.type == pygame.KEYDOWN:
             self.subStep+=1
       elif self.subStep == 2:
         self.dialogue(self.playerName, "Quem é você?")
-        for event in pygame.event.get():
+        for event in events:
           if event.type == pygame.KEYDOWN:
             self.subStep+=1
       elif self.subStep == 3:
         self.dialogue("Aegir", "Você realmente não se lembra de mim?", "Estive ao seu lado na Batalha de Azincourt.")
-        for event in pygame.event.get():
+        for event in events:
           if event.type == pygame.KEYDOWN:
             self.subStep+=1
       elif self.subStep == 4:
         self.dialogue("Aegir", "Enquanto você fugia com o seu batalhão,", "nós fomos deixados para morrer! Covarde!")
-        for event in pygame.event.get():
+        for event in events:
           if event.type == pygame.KEYDOWN:
             self.subStep+=1
       elif self.subStep == 5:
         self.dialogue(self.playerName, "Aquela batalha estava perdida. Permanecer seria", "uma sentença de morte. Não havia esperança…")
-        for event in pygame.event.get():
+        for event in events:
           if event.type == pygame.KEYDOWN:
             self.subStep+=1
       elif self.subStep == 6:
         self.dialogue("Aegir", "Não havia esperança para você, talvez.", "Para nós, havia honra. Fomos massacrados…")
-        for event in pygame.event.get():
+        for event in events:
           if event.type == pygame.KEYDOWN:
             self.subStep+=1
       elif self.subStep == 7:
         self.dialogue("Aegir", "Eu sobrevivi por um milagre apenas para ser preso.", "Hoje, vim cobrar a dívida que você deixou para trás.")
-        for event in pygame.event.get():
+        for event in events:
           if event.type == pygame.KEYDOWN:
             self.subStep+=1
       elif self.subStep == 8:
         self.dialogue(self.playerName, "Foi há anos… Não pode entender o peso que carrego.", "Tentei viver, mas o passado nunca me deixou em paz.")
-        for event in pygame.event.get():
+        for event in events:
           if event.type == pygame.KEYDOWN:
             self.subStep+=1
       elif self.subStep == 9:
         self.dialogue("Aegir", "Então sabe o que deve fazer. A dívida de um desertor", "só se paga com sangue. A escolha é sua… ")
-        for event in pygame.event.get():
+        for event in events:
           if event.type == pygame.KEYDOWN:
             self.subStep+=1
       elif self.subStep == 10:
         self.dialogue("Aegir", "irá encarar seu fim com ou sem honra?")
-        for event in pygame.event.get():
+        for event in events:
           if event.type == pygame.KEYDOWN:
             self.subStep+=1
       elif self.subStep == 11:
         self.dialogue(self.playerName, "Minha vida foi marcada pela fuga e pelo medo…", "mas não agora. Aceito meu destino.")
-        for event in pygame.event.get():
+        for event in events:
           if event.type == pygame.KEYDOWN:
             self.subStep+=1
       elif self.subStep == 12:
@@ -151,53 +156,101 @@ class History():
         else: self.delay-=1
       elif self.subStep == 15:
         self.screen.fill((0, 0, 0))
-        self.dialogue("Guia", "Ei...")
-        for event in pygame.event.get():
+        self.dialogue("Guia", "Ah, veja só… seja bem-vindo ao seu destino final.")
+        for event in events:
           if event.type == pygame.KEYDOWN:
             self.subStep+=1
       elif self.subStep == 16:
         self.screen.fill((0, 0, 0))
-        self.dialogue("Guia", "Abras os olhos...")
-        self.delay = FPS
-        for event in pygame.event.get():
+        self.dialogue("Guia", "Ou… será que é só o começo?.")
+        for event in events:
           if event.type == pygame.KEYDOWN:
             self.subStep+=1
       elif self.subStep == 17:
-        self.screen.fill((0, 0, 0)) 
-        self.dialogue("Guia", "Deixa eu te dar uma dica: lá em cima, bem longe daqui,", "dizem que tem uma saída.")
-        for event in pygame.event.get():
+        self.screen.fill((0, 0, 0))
+        self.dialogue("Guia", "Quem diria… um \"grande cavaleiro\", reduzido a isso.", "Parece que o passado finalmente cobrou o seu preço, não é?")
+        for event in events:
           if event.type == pygame.KEYDOWN:
             self.subStep+=1
+      elif self.subStep == 18:
+        self.screen.fill((0, 0, 0))
+        self.dialogue("Guia", "Mas, como você parece alguém determinado a lutar até o ", "último suspiro, vou te dar uma chance.")
+        for event in events:
+          if event.type == pygame.KEYDOWN:
+            self.subStep+=1
+      elif self.subStep == 19:
+        self.screen.fill((0, 0, 0))
+        self.dialogue("Guia", "Dizem que se você escalar o suficiente,", "há uma saída lá em cima…")
+        for event in events:
+          if event.type == pygame.KEYDOWN:
+            self.subStep+=1
+      elif self.subStep == 20:
+        self.screen.fill((0, 0, 0))
+        self.dialogue("Guia", "embora eu não apostasse muito nisso,", "se fosse você")
+        for event in events:
+          if event.type == pygame.KEYDOWN:
+            self.subStep+=1
+      elif self.subStep == 21:
+        self.screen.fill((0, 0, 0))
+        self.dialogue("Guia", "Agora, ouça com atenção. Seu caminho é simples:", "Use as teclas A e D para se mover")
+        for event in events:
+          if event.type == pygame.KEYDOWN:
+            self.subStep+=1
+      elif self.subStep == 22:
+        self.screen.fill((0, 0, 0)) 
+        self.dialogue("Guia", "E espaço para pular")
+        for event in events:
+          if event.type == pygame.KEYDOWN:
+            self.subStep+=1
+      elif self.subStep == 23:
+        self.screen.fill((0, 0, 0)) 
+        self.dialogue("Guia", "Mas neste caminho também terão inimigos,", "então é melhor você se preparar")
+        for event in events:
+          if event.type == pygame.KEYDOWN:
+            self.subStep+=1
+      elif self.subStep == 24:
+        self.screen.fill((0, 0, 0)) 
+        self.dialogue("Guia", "Use sua espada pressionando F", "E seu escudo pressionando E")
+        for event in events:
+          if event.type == pygame.KEYDOWN:
+            self.subStep+=1
+      elif self.subStep == 25:
+        self.screen.fill((0, 0, 0)) 
+        self.dialogue("Guia", "Então, boa sorte… herói. Suba o mais alto que puder." )
+        for event in events:
+          if event.type == pygame.KEYDOWN:
+            self.subStep+=1
+      elif self.subStep == 26:
+        self.screen.fill((0, 0, 0)) 
+        self.dialogue("Guia", "Quem sabe você chegue lá em cima… e encontre a grande", "surpresa que te espera.!" )
+        for event in events:
+          if event.type == pygame.KEYDOWN:
+            self.subStep+=1
+      elif self.subStep == 28:
+        self.screen.fill((0, 0, 0))
+        self.player.rect.move_ip(0, -10)
+        if self.delay < 0:
+          self.subStep +=1
+        else: self.delay-=1
+        return False
+      elif self.subStep == 29:
+        self.dialogue("Guia", "Parabens! Você conquistou a eternidade no paraiso!" )
+        self.winsound.play()
+        for event in events:
+          if event.type == pygame.KEYDOWN:
+            self.endded = True
       else: 
         return True
       
-# Voz Misteriosa:
-
-# Ah, veja só… seja bem-vindo ao seu destino final.
-
-# Ou… será que é só o começo?
-
-# Quem diria… um "grande cavaleiro", reduzido a isso. Parece que o passado finalmente cobrou o seu preço, não é?
-
-# Mas, como você parece alguém determinado a lutar até o último suspiro, vou te dar uma chance. Dizem que se você escalar o suficiente, há uma saída lá em cima… embora eu não apostasse muito nisso, se fosse você.
-
-# Agora, ouça com atenção. Seu caminho é simples: subir. Use as teclas W, A, S e D para se mover. E ah, o ESPAÇO será seu melhor amigo para saltar entre as plataformas.
-
-# Claro, subir nunca é tão fácil. A diversão só começa quando os "amigos" aparecem… digamos que eles não têm boas intenções. Se quer sobreviver, use F para lutar. Acerte um bom golpe para passar por eles.
-
-# E não seja tolo. Você vai precisar de defesa. E levantará seu escudo. Pode não parecer muito, mas, acredite, é melhor do que sentir o aço deles cortando você.
-
-# Então, boa sorte… herói. Suba o mais alto que puder. Quem sabe você chegue lá em cima… e encontre a grande surpresa que te espera.
-
-# Agora… abra os olhos e comece sua escalada.
-      
-    # self.personsGroup.update()
-    # self.personsGroup.draw(self.screen)
+      # 
     if not paused: pygame.display.flip()
     return False
       
+  def end(self):
+    self.delay = 10
+    self.subStep = 28
 
-  def update(self, paused =False):
+  def update(self, events, paused =False):
 
     if self.step == 1:
-      return self.scene1(paused)
+      return self.scene1(events, paused) 

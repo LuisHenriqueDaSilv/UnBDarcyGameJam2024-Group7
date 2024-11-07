@@ -20,12 +20,13 @@ def createEnemies(spriteGroup):
 
   spriteGroup.add(Wizard(-2140, 150, 400))
   spriteGroup.add(DemonFly(-2290, 0, 100))
-  spriteGroup.add(DemonFly(-2270, 500, 600))
+  spriteGroup.add(DemonFly(-2270, 500, 590))
 
-  spriteGroup.add(Wizard(-2760, 50, 150))
-  spriteGroup.add(DemonAxe(-2760, 200, 250))
+  spriteGroup.add(Wizard(-2760, 50, 300))
 
-  spriteGroup.add(DemonFly(-3650, 350, 450))
+  spriteGroup.add(DemonFly(-3705, 450, 550))
 
-  spriteGroup.add(DemonAxe(-3330, 250, 500))
-  spriteGroup.add(Wizard(-3805, 0, 150))
+  spriteGroup.add(DemonAxe(-3330, 250, 450))
+  spriteGroup.add(Wizard(-3860, 0, 200))
+
+  spriteGroup.add(DemonFly(-4140, 200, 250))
