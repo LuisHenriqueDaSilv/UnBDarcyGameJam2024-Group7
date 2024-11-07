@@ -192,10 +192,10 @@ def main(pastHistory=None):
         player.run(-5)
     elif key[pygame.K_d] and player.bottomCollide and not player.currentStatus == 'attack' and not player.currentStatus == 'death':
         player.run(5)
-    elif key[pygame.K_f] and not player.currentStatus == 'death':
+    elif key[pygame.K_o] and not player.currentStatus == 'death':
         player.attack()
 
-    elif key[pygame.K_e] and player.currentStatus != "attack" and not player.currentStatus == 'death' and player.currentStatus != "block":
+    elif key[pygame.K_i] and player.currentStatus != "attack" and not player.currentStatus == 'death' and player.currentStatus != "block":
       player.defense()
     elif player.bottomCollide and not player.currentStatus == 'attack' and not player.currentStatus == 'death' and player.currentStatus != 'block' and not player.currentStatus == 'hurt':
         player.xSpeed = 0

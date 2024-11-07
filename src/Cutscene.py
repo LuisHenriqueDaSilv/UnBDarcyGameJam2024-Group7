@@ -210,7 +210,7 @@ class History():
             self.subStep+=1
       elif self.subStep == 24:
         self.screen.fill((0, 0, 0)) 
-        self.dialogue("Guia", "Use sua espada pressionando F", "E seu escudo pressionando E")
+        self.dialogue("Guia", "Use sua espada pressionando O", "I seu escudo pressionando E")
         for event in events:
           if event.type == pygame.KEYDOWN:
             self.subStep+=1
