@@ -1,6 +1,8 @@
 import pygame
 from settings import SCREEN_HEIGHT, FPS
 
+
+
 class Player(pygame.sprite.Sprite):
   def __init__(self, x, y, npcMode=False):
     pygame.sprite.Sprite.__init__(self)
@@ -17,6 +19,7 @@ class Player(pygame.sprite.Sprite):
     self.lastMove = 1
     self.sprites = {}
     self.falling = False
+    self.hitSound = pygame.mixer.Sound('song/hitSound.wav')
 
     self.dead = False;
     self.sprites['idle'] = []
@@ -90,12 +93,14 @@ class Player(pygame.sprite.Sprite):
     self.rect = self.image.get_rect()
     self.rect.topleft = x, y
 
-  def update(self):
-    if self.npcMode:
+  def update(self, npcMode=False):
+    if self.npcMode or npcMode:
       currentTypeOfImage = self.currentStatus
 
       self.currentSpriteIndex = self.currentSpriteIndex + 0.1 if self.currentSpriteIndex < len(self.sprites[currentTypeOfImage])-1 else 3;
       self.image = self.sprites[currentTypeOfImage][int(self.currentSpriteIndex)]
+      self.image = pygame.transform.flip(self.image, True, False)
+
 
     else:
       if self.attackDelay > 0:
@@ -152,6 +157,9 @@ class Player(pygame.sprite.Sprite):
 
   def changeStatus(self, newStatus):
     if newStatus == self.currentStatus: return
+    if newStatus == "attack":
+        self.hitSound.set_volume(1)
+        self.hitSound.play()
     self.currentStatus = newStatus
     self.currentSpriteIndex = 0
 
