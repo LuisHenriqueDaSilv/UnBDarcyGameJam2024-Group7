@@ -12,7 +12,7 @@ from settings import *
 
 from settings import SCREEN_HEIGHT, SCREEN_WIDTH
 pygame.init()
-pygame.display.set_caption("UnB Darcy Game Jam - Grupo 07")
+pygame.display.set_caption("Hell to Heaven - UnB Darcy Game Jam - Grupo 07")
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 clock = pygame.time.Clock()
 
@@ -30,8 +30,8 @@ ambient_sounds = [
 for sound in ambient_sounds:
     sound.set_volume(0.7)
 
-restart = True
 def main(pastHistory=None):
+  restart = False
   justDead = False
   
   history = None
@@ -90,7 +90,9 @@ def main(pastHistory=None):
     events = pygame.event.get()
     for event in events:
         if event.type == pygame.QUIT:
-            running = False
+          running = False
+    if not running: continue
+    
     if history.endded:
       restart = True
       running = False
@@ -192,10 +194,10 @@ def main(pastHistory=None):
         player.run(-5)
     elif key[pygame.K_d] and player.bottomCollide and not player.currentStatus == 'attack' and not player.currentStatus == 'death':
         player.run(5)
-    elif key[pygame.K_o] and not player.currentStatus == 'death':
+    elif key[pygame.K_l] and not player.currentStatus == 'death':
         player.attack()
 
-    elif key[pygame.K_i] and player.currentStatus != "attack" and not player.currentStatus == 'death' and player.currentStatus != "block":
+    elif key[pygame.K_k] and player.currentStatus != "attack" and not player.currentStatus == 'death' and player.currentStatus != "block":
       player.defense()
     elif player.bottomCollide and not player.currentStatus == 'attack' and not player.currentStatus == 'death' and player.currentStatus != 'block' and not player.currentStatus == 'hurt':
         player.xSpeed = 0
