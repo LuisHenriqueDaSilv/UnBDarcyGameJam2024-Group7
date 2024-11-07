@@ -2,8 +2,9 @@ import pygame
 from settings import SCREEN_HEIGHT, FPS
 
 class Player(pygame.sprite.Sprite):
-  def __init__(self):
+  def __init__(self, x, y, npcMode=False):
     pygame.sprite.Sprite.__init__(self)
+    self.npcMode = npcMode
     self.currentStatus = 'idle'
     self.life = 100
     self.bottomCollide = False
@@ -87,60 +88,67 @@ class Player(pygame.sprite.Sprite):
     self.image = self.sprites[self.currentStatus][self.currentSpriteIndex]
 
     self.rect = self.image.get_rect()
-    self.rect.topleft = 100, 500
+    self.rect.topleft = x, y
 
-  def update(self): 
-    if self.attackDelay > 0:
-      self.attackDelay -= 1
-    currentTypeOfImage = self.currentStatus
-    if not self.currentStatus == "attack" and not self.bottomCollide and self.currentStatus != "death" :
-      currentTypeOfImage = 'fall'
-    if self.currentStatus == 'attack' and not self.currentSpriteIndex < len(self.sprites[currentTypeOfImage])-1:
-      self.endAttack()
-    if self.currentStatus == 'attack' and int(self.currentSpriteIndex) == 2 and self.lastMove < 0: 
-      self.rect.move_ip(-4, 0)
-    
-    if self.currentStatus == "block" and int(self.currentSpriteIndex) == len(self.sprites[currentTypeOfImage])-1:
-      self.changeStatus('idle')
-    
-    if self.currentStatus == "hurt" and int(self.currentSpriteIndex) == len(self.sprites[currentTypeOfImage])-1:
-      self.changeStatus('idle')
+  def update(self):
+    if self.npcMode:
+      currentTypeOfImage = self.currentStatus
 
-    if self.currentStatus == 'death' and int(self.currentSpriteIndex) == 5:
-      self.dead = True
+      self.currentSpriteIndex = self.currentSpriteIndex + 0.1 if self.currentSpriteIndex < len(self.sprites[currentTypeOfImage])-1 else 3;
+      self.image = self.sprites[currentTypeOfImage][int(self.currentSpriteIndex)]
+
+    else:
+      if self.attackDelay > 0:
+        self.attackDelay -= 1
+      currentTypeOfImage = self.currentStatus
+      if not self.currentStatus == "attack" and not self.bottomCollide and self.currentStatus != "death" :
+        currentTypeOfImage = 'fall'
+      if self.currentStatus == 'attack' and not self.currentSpriteIndex < len(self.sprites[currentTypeOfImage])-1:
+        self.endAttack()
+      if self.currentStatus == 'attack' and int(self.currentSpriteIndex) == 2 and self.lastMove < 0: 
+        self.rect.move_ip(-4, 0)
+      
+      if self.currentStatus == "block" and int(self.currentSpriteIndex) == len(self.sprites[currentTypeOfImage])-1:
+        self.changeStatus('idle')
+      
+      if self.currentStatus == "hurt" and int(self.currentSpriteIndex) == len(self.sprites[currentTypeOfImage])-1:
+        self.changeStatus('idle')
+
+      if self.currentStatus == 'death' and int(self.currentSpriteIndex) == 5:
+        self.dead = True
 
 
-    self.currentSpriteIndex = self.currentSpriteIndex +0.2 if self.currentSpriteIndex < len(self.sprites[currentTypeOfImage])-1 else 0;
-    self.image = self.sprites[currentTypeOfImage][int(self.currentSpriteIndex)]
+      self.currentSpriteIndex = self.currentSpriteIndex +0.2 if self.currentSpriteIndex < len(self.sprites[currentTypeOfImage])-1 else 0;
+      self.image = self.sprites[currentTypeOfImage][int(self.currentSpriteIndex)]
 
-    if self.topCollide and self.ySpeed < 0:
-      self.ySpeed = 0
-    
-    if self.rightCollide and self.xSpeed > 0:
-      self.xSpeed = 0
-      if self.ySpeed < 0:
+      if self.topCollide and self.ySpeed < 0:
         self.ySpeed = 0
-    if self.leftCollide and self.xSpeed < 0: 
-      self.xSpeed = 0
-      if self.ySpeed < 0:
-        self.ySpeed = 0
-    if self.currentStatus == "blockIdle":
-      self.xSpeed = 0
+      
+      if self.rightCollide and self.xSpeed > 0:
+        self.xSpeed = 0
+        if self.ySpeed < 0:
+          self.ySpeed = 0
+      if self.leftCollide and self.xSpeed < 0: 
+        self.xSpeed = 0
+        if self.ySpeed < 0:
+          self.ySpeed = 0
+      if self.currentStatus == "blockIdle":
+        self.xSpeed = 0
 
-    if not self.bottomCollide:
-      self.ySpeed += 0.2
-    else: 
-      self.ySpeed = 0;
+      if not self.bottomCollide:
+        self.ySpeed += 0.2
+      else: 
+        self.ySpeed = 0;
 
-    if self.lastMove < 0:
-      self.image = pygame.transform.flip(self.image, True, False)
+      if self.lastMove < 0:
+        self.image = pygame.transform.flip(self.image, True, False)
 
-    if self.ySpeed != 0 and self.rect.y > SCREEN_HEIGHT/2:
-      self.rect.move_ip(0, self.ySpeed if self.currentStatus != "death" else 0)
+      if self.ySpeed != 0 and self.rect.y > SCREEN_HEIGHT/2:
+        self.rect.move_ip(0, self.ySpeed if self.currentStatus != "death" else 0)
 
-    if self.xSpeed < 0 and self.rect.x < 5: return # Limite  esquerdo
-    if self.xSpeed > 0 and self.rect.x > 600-self.rect.width: return # Limite  direito
-    self.rect.move_ip(self.xSpeed if self.ySpeed == 0 else self.xSpeed/1.5, 0)
+      if self.xSpeed < 0 and self.rect.x < 5: return # Limite  esquerdo
+      if self.xSpeed > 0 and self.rect.x > 600-self.rect.width: return # Limite  direito
+      self.rect.move_ip(self.xSpeed if self.ySpeed == 0 else self.xSpeed/1.5, 0)
 
   def changeStatus(self, newStatus):
     if newStatus == self.currentStatus: return

@@ -6,7 +6,7 @@ from src.Background import Background
 from src.createWorld import createWorld
 from src.createEnemies import createEnemies
 from src.lifeBar import LifeBar
-from src.History import History
+from src.Cutscene import History
 from settings import *
 
 from settings import SCREEN_HEIGHT, SCREEN_WIDTH
@@ -30,9 +30,8 @@ ambient_sounds = [
 for sound in ambient_sounds:
     sound.set_volume(0.7)
 
-#coloca dentro do def main()
 
-history = History()
+history = History(screen)
 
 restart = True
 def main():
@@ -55,11 +54,16 @@ def main():
   backgroundGroup.add(Background(-2*SCREEN_HEIGHT-florestBackbackground.rect.height, 'florest'))
   skyInit = -2*SCREEN_HEIGHT-florestBackbackground.rect.height
   backgroundGroup.add(Background(skyInit-skyBackbackground.rect.height, 'sky'))
+  backgroundGroup.add(Background(skyInit-2*skyBackbackground.rect.height, 'sky'))
+  backgroundGroup.add(Background(skyInit-3*skyBackbackground.rect.height, 'sky'))
+  backgroundGroup.add(Background(skyInit-4*skyBackbackground.rect.height, 'sky'))
+  backgroundGroup.add(Background(skyInit-5*skyBackbackground.rect.height, 'sky'))
+
 
   game_over_image = pygame.image.load('assets/gameOver.png')
   game_over_image = pygame.transform.scale(game_over_image, (400, 390))
 
-  player = Player()
+  player = Player(200, SCREEN_HEIGHT-150)
   allSprites.add(player)
   lifebar = LifeBar()
   lifebarGroup.add(lifebar)
@@ -68,18 +72,35 @@ def main():
   createEnemies(enemiesGroup)
 
   gameOverSound = pygame.mixer.Sound('song/gameOver1.wav')
-  pygame.mixer.music.set_volume(0.5)
+  pygame.mixer.music.set_volume(0.5) #Adicionar dps
   pygame.mixer.music.load('song/background-sound.mpeg')
   pygame.mixer.music.play(-1)  # Toca a música em loop
 
   running = True
   while running:
-
-    # historyMovie = history.update(screen)
-    # if historyMovie: continue
-
-
     clock.tick(FPS) 
+
+    if not inicio_jogo:    
+      for event in pygame.event.get():
+          if event.type == pygame.QUIT:
+              running = False
+          elif event.type == pygame.KEYDOWN:
+              if event.key == pygame.K_RETURN:
+                mostrar_frase = False
+                inicio_jogo = True
+
+    freeToPlay = history.update(not inicio_jogo)
+    print(freeToPlay)
+
+    if not inicio_jogo:       
+      fonte = pygame.font.SysFont('arial', 40, True, False)
+      mensagem = 'press enter'
+      texto_formatado = fonte.render(mensagem, False, (255, 255, 255))
+      screen.blit(texto_formatado, (210, 390))   
+      pygame.display.flip()
+
+    if not freeToPlay: continue
+
     screen.fill((0, 0, 0))
     current_time = pygame.time.get_ticks()
     if current_time >= next_ambient_sound_time:
@@ -164,14 +185,7 @@ def main():
             player.jump()
     
 
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-        elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_RETURN:
-              # Ao pressionar Enter, a música toca e o jogo começa
-              mostrar_frase = False
-              inicio_jogo = True
+
 
 
     backgroundGroup.draw(screen)
@@ -193,11 +207,6 @@ def main():
     lifebarGroup.draw(screen)
     lifebarGroup.update()  
 
-    if mostrar_frase:
-        fonte = pygame.font.SysFont('arial', 40, True, False)
-        mensagem = 'press enter'
-        texto_formatado = fonte.render(mensagem, False, (255, 255, 255))
-        screen.blit(texto_formatado, (210, 390))
 
     pygame.display.flip()
   if restart:
