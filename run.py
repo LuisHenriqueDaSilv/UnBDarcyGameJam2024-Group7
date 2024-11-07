@@ -110,7 +110,7 @@ def main(pastHistory=None):
       fonte = pygame.font.SysFont('arial', 40, True, False)
       mensagem = 'press enter'
       texto_formatado = fonte.render(mensagem, False, (255, 255, 255))
-      screen.blit(texto_formatado, (210, 390))   
+      screen.blit(texto_formatado, (210, 390))
       pygame.display.flip()
 
     if not freeToPlay: continue
